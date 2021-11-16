@@ -21,23 +21,32 @@ public class Signup extends HttpServlet{
         if(firstname.contentEquals("") || lastname.contentEquals(""))
         {
             out.println("<h3>Missing Name!</h3>");
+            RequestDispatcher req = request.getRequestDispatcher("register1.jsp");
+            req.include(request, response);
             
         }
         else if(accountname.length() > 10 || accountname.contentEquals("")) {
         	out.println("<h3>Invalid Input! Try Again!!!</h3>");
+        	RequestDispatcher req = request.getRequestDispatcher("register1.jsp");
+            req.include(request, response);
         	
         }
         else if(phonenumber.contains("") || phonenumber.contains("_") || phonenumber.length() > 10 || !phonenumber.matches("[0-9]+")) {
         	out.println("<h3>Invalid Phone Number!</h3>");
+        	RequestDispatcher req = request.getRequestDispatcher("register1.jsp");
+            req.include(request, response);
         	
         }
         else if (password.contains("") || password.length() > 10) {
         	out.println("<h3>Invalid PassCode!!!</h3>");
+        	RequestDispatcher req = request.getRequestDispatcher("register1.jsp");
+            req.include(request, response);
         	
         }
         else if (password != confirmpassword) {
         	out.println("<h3>Password does not match!!!</h3>");
-        	
+        	RequestDispatcher req = request.getRequestDispatcher("register1.jsp");
+            req.include(request, response);
         }
         else {
         	try {
@@ -54,6 +63,8 @@ public class Signup extends HttpServlet{
             
 	            if(i > 0) {
 	            	out.println("<h3>You are sucessfully registered</h3>");
+	            	RequestDispatcher req = request.getRequestDispatcher("register2.jsp");
+	    			req.forward(request, response);
 	            }
             }
         	catch(Exception se) {
