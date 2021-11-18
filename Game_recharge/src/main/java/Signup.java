@@ -2,10 +2,24 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-import java.sql.*;
 
 @WebServlet("/Signup")
 public class Signup extends HttpServlet{
+	private static final long serialVersionUID = 1L;
+	
+	
+	public Signup() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+		RequestDispatcher dispatcher = request.getRequestDispatcher("Game_recharge/src/main/webapp/WEB-INF/register1.jsp");
+		dispatcher.forward(request, response);
+	}
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html");
@@ -18,60 +32,36 @@ public class Signup extends HttpServlet{
         String password = request.getParameter("password_");
         String confirmpassword = request.getParameter("confirm");
         
+        User user = new User(firstname, lastname, password, accountname, phonenumber);
+        
         if(firstname.contentEquals("") || lastname.contentEquals(""))
         {
             out.println("<h3>Missing Name!</h3>");
-            RequestDispatcher req = request.getRequestDispatcher("register1.jsp");
-            req.include(request, response);
-            
+            response.sendRedirect("register1.jsp");
         }
         else if(accountname.length() > 10 || accountname.contentEquals("")) {
         	out.println("<h3>Invalid Input! Try Again!!!</h3>");
-        	RequestDispatcher req = request.getRequestDispatcher("register1.jsp");
-            req.include(request, response);
-        	
+        	response.sendRedirect("register1.jsp");
         }
         else if(phonenumber.contains("") || phonenumber.contains("_") || phonenumber.length() > 10 || !phonenumber.matches("[0-9]+")) {
         	out.println("<h3>Invalid Phone Number!</h3>");
-        	RequestDispatcher req = request.getRequestDispatcher("register1.jsp");
-            req.include(request, response);
-        	
+        	response.sendRedirect("register1.jsp");
+
         }
         else if (password.contains("") || password.length() > 10) {
         	out.println("<h3>Invalid PassCode!!!</h3>");
-        	RequestDispatcher req = request.getRequestDispatcher("register1.jsp");
-            req.include(request, response);
-        	
+        	response.sendRedirect("register1.jsp");
+
         }
         else if (password != confirmpassword) {
         	out.println("<h3>Password does not match!!!</h3>");
-        	RequestDispatcher req = request.getRequestDispatcher("register1.jsp");
-            req.include(request, response);
+        	response.sendRedirect("register1.jsp");
         }
         else {
-        	try {
-	        	Class.forName("com.mysql.jdbc.Driver");
-	        	Connection con = DriverManager.getConnection("jdbc:mysql:/ /localhost:3306/test", "username", "password");
-	        	PreparedStatement ps = con.prepareStatement("insert into User values(?,?,?,?,?,?)");
-	        	ps.setString(1, firstname);
-	            ps.setString(2, lastname);
-	            ps.setString(3, phonenumber);
-	            ps.setString(4, accountname);
-	            ps.setString(5, password);
-	            ps.setString(6, confirmpassword);
-	            int i = ps.executeUpdate();
-            
-	            if(i > 0) {
-	            	out.println("<h3>You are sucessfully registered</h3>");
-	            	RequestDispatcher req = request.getRequestDispatcher("register2.jsp");
-	    			req.forward(request, response);
-	            }
-            }
-        	catch(Exception se) {
-                se.printStackTrace();
-            }
-        
-        
+        	SignupDao rDao = new SignupDao();
+    		String result = rDao.insert(user);
+    		RequestDispatcher dispatcher = request.getRequestDispatcher("Game_recharge/src/main/webapp/WEB-INF/register2.jsp");
+    		dispatcher.forward(request, response);
         	}
         }
 }
