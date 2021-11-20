@@ -1,17 +1,17 @@
-package net.javaguides.login.database;
-
+package net.javaguides.register.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import net.javaguides.register.model.User;
 
-import net.javaguides.login.bean.LoginBean;
+public class SignupDao {
+	public int registerEmployee(User user) throws ClassNotFoundException {
+        String INSERT_USERS_SQL = "INSERT INTO user" +
+            "  (first_name, last_name, phone, accname, password, confirmpassword) VALUES " +
+            " (?, ?, ?, ?, ?,?);";
 
-public class LoginDao {
-
-    public boolean validate(LoginBean loginBean) throws ClassNotFoundException {
-        boolean status = false;
+        int result = 0;
 
         Class.forName("com.mysql.jdbc.Driver");
 
@@ -19,19 +19,23 @@ public class LoginDao {
             .getConnection("jdbc:mysql://localhost:3306/mysql_database?useSSL=false", "root", "root");
 
             // Step 2:Create a statement using connection object
-            PreparedStatement preparedStatement = connection
-            .prepareStatement("select * from user_info where username = ? and password = ? ")) {
-            preparedStatement.setString(1, loginBean.getUsername());
-            preparedStatement.setString(2, loginBean.getPassword());
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS_SQL)) {
+            preparedStatement.setString(1, user.getFname());
+            preparedStatement.setString(2, user.getLname());
+            preparedStatement.setString(3, user.getPhone());
+            preparedStatement.setString(4, user.getAccount());
+            preparedStatement.setString(5, user.getPassword());
+            preparedStatement.setString(6, user.getConfirmPassword());
 
             System.out.println(preparedStatement);
-            ResultSet rs = preparedStatement.executeQuery();
-            status = rs.next();
+            // Step 3: Execute the query or update query
+            result = preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
+            // process sql exception
             printSQLException(e);
         }
-        return status;
+        return result;
     }
 
     private void printSQLException(SQLException ex) {

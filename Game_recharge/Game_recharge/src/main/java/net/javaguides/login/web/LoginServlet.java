@@ -15,9 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import net.javaguides.login.bean.LoginBean;
 import net.javaguides.login.database.LoginDao;
-/**
- * Servlet implementation class LoginServlet
- */
+
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -27,7 +25,7 @@ public class LoginServlet extends HttpServlet {
      */
     public LoginServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        
     }
 
 	/**
@@ -39,7 +37,6 @@ public class LoginServlet extends HttpServlet {
 	 */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     	    throws ServletException, IOException {
-
     	        String username = request.getParameter("username");
     	        String password = request.getParameter("password");
     	        LoginBean loginBean = new LoginBean();
@@ -48,7 +45,6 @@ public class LoginServlet extends HttpServlet {
 
     	        try {
     	            if (loginDao.validate(loginBean)) {
-    	
     	                response.sendRedirect("loginsuccess.jsp");
     	            } else {
     	                
